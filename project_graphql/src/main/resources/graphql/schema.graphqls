@@ -1,0 +1,40 @@
+# LocalDateTime implementation
+scalar LocalDateTime
+
+type Board {
+    id: ID!
+    createDateTime: LocalDateTime
+    subject: String!
+    contents: String
+    readCount: Int
+    comments: [Comment]
+}
+
+type Comment {
+    id: ID!
+    createDateTime: LocalDateTime
+    comment: String!
+    isDelete: Boolean
+}
+
+
+#ROOT
+type Query {
+    findAllBoards: [Board]!
+	countBoards: Int!
+	
+    findAllComments: [Comment]!
+
+}
+
+#ROOT
+type Mutation {
+	createBoard(subject: String!, contents: String): Board!
+	readBoard(id: ID!): Board!
+	updateBoard(id: ID!, contents: String): Board!
+	deleteBoard(id: ID!): Boolean
+	
+	createComment(comment: String!, boardId: Int!): Comment!
+	updateComment(id: ID!, comment: String!): Comment!
+	deleteComment(id: ID!): Boolean
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+		<Property name="profile">local</Property>
+		<Property name="filePath">C:/ServerConfig/tmp/was/logs</Property>
+		<Property name="service">platform-template</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout>
+				<Pattern>%n[%date{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%logger{0}.%method \(%file:%line\)]▶▶▶ %msg ◀◀◀</Pattern>
+			</PatternLayout>
+		</Console>
+		<RollingFile name="rollingFile" 
+			fileName="${filePath}/${service}.log" 
+			filePattern="${filePath}/$${date:yyyy-MM}/${service}-%d{MM-dd-yyyy}-%i.log">
+			<PatternLayout>
+				<Pattern>%n[%date{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%logger{0}.%method \(%file:%line\)]▶▶▶ %msg ◀◀◀</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="20 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="java.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Logger name="com.common" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+		<Logger name="com.domain" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
+		</Logger>
+	    <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+	        <AppenderRef ref="console" />
+	        <AppenderRef ref="rollingFile" />
+	    </Logger>
+		<Logger name="org.springframework" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
+		</Logger>
+		<Logger name="io.undertow.server" level="INFO"
+			additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
+		</Logger>
+		<Root level="ERROR">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>
+
