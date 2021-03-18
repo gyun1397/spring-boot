@@ -4,4 +4,7 @@
 Just various utilities.
 
 ### project_base
-Spring boot + JPA + GraphQL + Mybatis Base project
+RestAPI default interface, GraphQL Scalar Type and Mybatis type handler (LocalDate/LocalDateTime)
+
+### project_template
+...
