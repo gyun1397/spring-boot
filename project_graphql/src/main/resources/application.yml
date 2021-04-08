@@ -70,7 +70,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: release    import: optional:classpath:/usr/local/springboot/property/config.yml
+      on-profile: release    import: optional:file:/usr/local/springboot/property/config.yml
 #  datasource:
 #    url: jdbc:log4jdbc:mariadb://{db-url}/dev?autoReconnect=true&verifyServerCertificate=false&useSSL=false
 #    username: {user-name}

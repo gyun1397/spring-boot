@@ -517,6 +517,9 @@ public class StringUtil {
 
         return str.substring(start, end);
     }
+    public static String substring(String str, int end) {
+        return substring(str, 0, end);
+    }
     
     public static String substringStart(String str, int start) {
         return substring(str, start, str.length());

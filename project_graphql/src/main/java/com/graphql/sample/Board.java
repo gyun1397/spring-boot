@@ -1,31 +1,21 @@
 package com.graphql.sample;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
+import com.common.jpa.domain.LogEntity;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "BOARD")
-public class Board {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @CreationTimestamp
-    @Column(name = "CREATE_DT", updatable = false)
-    private LocalDateTime createDateTime; // 최초 생성일자
+public class Board extends LogEntity<Long> {
     @Column(name = "SUBJECT")
     private String subject;   // 제목
     @Column(name = "CONTENT")
