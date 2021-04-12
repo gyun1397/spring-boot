@@ -18,10 +18,13 @@ spring:
     use-hal-as-default-json-media-type: false
 # Graphql prefix
 graphql:
-  servlet:
-    mapping: /gql
-    enabled: true
-    corsEnabled: true
+#  servlet:
+#    mapping: /gql
+#    enabled: true
+#    corsEnabled: true
+  spqr:
+    gui:
+      enabled: true
 server:
   error:
     whitelabel:
