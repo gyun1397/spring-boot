@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Welcome!</title>
+<script type='text/javascript' src='/static/test.js'></script>
+<script type='text/javascript' src='/static/jquery-1.11.1.js'></script>
+</head>
+<body>
+	<h1 th:id=message>Welcome</h1>
+	<script th:inline="javascript">
+		var message = initMessage(/*[[${mssg}]]*/);
+		//document.getElementById("message").innerHTML = message;
+		$("#message").text(message);
+	</script>
+</body>
+
+</html>
