@@ -2,7 +2,6 @@
 <Configuration>
 	<Properties>
 		<Property name="profile">release</Property>
-		<Property name="filePath">/usr/local/springboot/logs</Property>
 		<Property name="service">project-template</Property>
 	</Properties>
 	<Appenders>
@@ -11,34 +10,19 @@
 				<Pattern>%n[%date{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%logger{0}.%method \(%file:%line\)]▶▶▶ %msg ◀◀◀</Pattern>
 			</PatternLayout>
 		</Console>
-		<RollingFile name="rollingFile"
-			fileName="${filePath}/${service}-${profile}.log"
-			filePattern="${filePath}/$${date:yyyy-MM}/${service}-${profile}-%d{MM-dd-yyyy}-%i.log">
-			<PatternLayout>
-				<Pattern>%n[%date{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%logger{0}.%method \(%file:%line\)]▶▶▶ %msg ◀◀◀</Pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="20 MB" />
-			</Policies>
-		</RollingFile>
 	</Appenders>
 	<Loggers>
       <!--   <Logger name="com.common" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
-            <AppenderRef ref="rollingFile" />
         </Logger>
         <Logger name="com.domain" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
-            <AppenderRef ref="rollingFile" />
         </Logger>
 		<Logger name="org.springframework" level="INFO" additivity="false">
 			<AppenderRef ref="console" />
-			<AppenderRef ref="rollingFile" />
 		</Logger> -->
 		<Root level="ERROR">
 			<AppenderRef ref="console" />
-			<AppenderRef ref="rollingFile" />
 		</Root>
 	</Loggers>
 </Configuration>
