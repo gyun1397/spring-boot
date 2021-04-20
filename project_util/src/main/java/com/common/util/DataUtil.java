@@ -283,22 +283,67 @@ public class DataUtil {
             list = Arrays.asList((T[])obj);
         } else if (obj instanceof Collection) {
             list = new ArrayList<>((Collection<T>)obj);
+        } else if (obj instanceof String) {
+            list = (List<T>) listConvert((String) obj);
         }
         return list;
     }
-
     
-    public static void main(String[] args) {
-        List<Long> ids = new ArrayList<>();
-        ids.add(1l);
-        ids.add(2l);
-        ids.add(3l);
-        ids.add(4l);
-        Map<String, Object> map = new HashMap<>();
-        map.put("ids", ids);
-        System.out.println(listConvert(map.get("ids")).toString());
+    public static <T> List<T> listConvert(Object obj, Class<T> classType) {
+        if(obj == null) {
+            return null;
+        }
+        List<T> list = new ArrayList<>();
+        if (obj.getClass().isArray()) {
+            list = new ArrayList<>(Arrays.asList((T[])obj));
+        } else if (obj instanceof Arrays) {
+            list = new ArrayList<>(Arrays.asList((T[])obj));
+        } else if (obj instanceof Collection) {
+            list = new ArrayList<>((Collection<T>)obj);
+        } else if (obj instanceof String) {
+            list = listConvert((String) obj, classType);
+        }
+        return list;
     }
     
+    public static <T> List<T> listConvert(String str, Class<T> classType) {
+        if(str == null) {
+            return null;
+        }
+        String[] splits = str.split(",");
+        List<T> list = new ArrayList<>();
+        if (String.class.equals(classType)) {
+            for (String splitStr : splits) {
+                list.add((T) String.valueOf(splitStr));
+            }
+        } else if (Long.class.equals(classType)) {
+            for (String splitStr : splits) {
+                list.add((T) Long.valueOf(splitStr));
+            }
+        } else if (Integer.class.equals(classType)) {
+            for (String splitStr : splits) {
+                list.add((T) Integer.valueOf(splitStr));
+            }
+        } else if (Double.class.equals(classType)) {
+            for (String splitStr : splits) {
+                list.add((T) Double.valueOf(splitStr));
+            }
+        } else {
+            for (String splitStr : splits) {
+                list.add((T) String.valueOf(splitStr));
+            }
+        }
+        return list;
+    }
+    
+    
+    public static List<String> listConvert(String str) {
+        if(str == null) {
+            return null;
+        }
+        List<String> list = new ArrayList<>(Arrays.asList(str.split(",")));
+        return list;
+    }
     
     /**
      * 소숫점 targetDecimal 자리 밑에서 반올림
