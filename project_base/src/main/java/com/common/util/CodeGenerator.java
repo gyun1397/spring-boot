@@ -666,17 +666,6 @@ public class CodeGenerator {
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
                     + "\t\t\t\t\t\tbreak;\n";
-        } else if (fieldName.endsWith("Uid") || fieldName.toLowerCase().endsWith("uuid") || fieldName.endsWith("Id")) {
-            body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
-                    + "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
-                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) map.get(key)));\n"
-                    + "\t\t\t\t\t\tbreak;\n"
-                    + "\t\t\t\t\tcase \"" + fieldName + "_like\":\n"
-                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) map.get(key) + \"%\"));\n"
-                    + "\t\t\t\t\t\tbreak;\n"
-                    + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
-                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
-                    + "\t\t\t\t\t\tbreak;\n";
         } else if (StringUtil.in(fieldName, inCase) || fieldName.equals("state") || fieldName.endsWith("Check")) {
             body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
@@ -691,6 +680,17 @@ public class CodeGenerator {
                     + "\t\t\t\t\tcase \"" + getPlural(fieldName) + "\":\n"
                     + "\t\t\t\t\tcase \"" + getPlural(fieldName) + "_eq\":\n"
                     + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".in(DataUtil.listConvert(map.get(key))));\n"
+                    + "\t\t\t\t\t\tbreak;\n";
+        } else if (fieldName.endsWith("Uid") || fieldName.toLowerCase().endsWith("uuid") || fieldName.endsWith("Id")) {
+            body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_like\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) map.get(key) + \"%\"));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
                     + "\t\t\t\t\t\tbreak;\n";
         } else {
             body = "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
@@ -900,18 +900,7 @@ public class CodeGenerator {
 
     private static String stringOrCondition(String fieldName) {
         String body = null;
-        if (fieldName.endsWith("Uid") || fieldName.endsWith("Id")) {
-            body = "\t\t\t\tcase \"" + fieldName + "\":\n"
-                    + "\t\t\t\tcase \"" + fieldName + "_eq\":\n"
-                    + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) value));\n"
-                    + "\t\t\t\t\tbreak;\n"
-                    + "\t\t\t\tcase \"" + fieldName + "_like\":\n"
-                    + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) value + \"%\"));\n"
-                    + "\t\t\t\t\tbreak;\n"
-                    + "	            case \"" + fieldName + "_nn\":\n"
-                    + "\t\t\t\t\tbuilder.and(DataUtil.isTrue(value) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
-                    + "\t\t\t\t\tbreak;\n";
-        } else if (StringUtil.in(fieldName, inCase) || fieldName.equals("state") || fieldName.endsWith("Check")) {
+        if (StringUtil.in(fieldName, inCase) || fieldName.equals("state") || fieldName.endsWith("Check")) {
             body = "\t\t\t\tcase \"" + fieldName + "\":\n"
                     + "\t\t\t\tcase \"" + fieldName + "_eq\":\n"
                     + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) value));\n"
@@ -925,6 +914,17 @@ public class CodeGenerator {
                     + "\t\t\t\tcase \"" + getPlural(fieldName) + "\":\n"
                     + "\t\t\t\tcase \"" + getPlural(fieldName) + "_eq\":\n"
                     + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".in(DataUtil.listConvert(value)));\n"
+                    + "\t\t\t\t\tbreak;\n";
+        } else if (fieldName.endsWith("Uid") || fieldName.endsWith("Id")) {
+            body = "\t\t\t\tcase \"" + fieldName + "\":\n"
+                    + "\t\t\t\tcase \"" + fieldName + "_eq\":\n"
+                    + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) value));\n"
+                    + "\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\tcase \"" + fieldName + "_like\":\n"
+                    + "\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) value + \"%\"));\n"
+                    + "\t\t\t\t\tbreak;\n"
+                    + "	            case \"" + fieldName + "_nn\":\n"
+                    + "\t\t\t\t\tbuilder.and(DataUtil.isTrue(value) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
                     + "\t\t\t\t\tbreak;\n";
         } else {
             body = "\t\t\t\tcase \"" + fieldName + "_eq\":\n"
