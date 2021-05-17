@@ -1,6 +1,5 @@
 package com.common.util;
 
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,17 +13,17 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("rawtypes")
 public class StringUtil {
-    public final static String NUM                             = "([0-9])";
-    public final static String ENG                             = "([a-zA-Z])";
-    public final static String KR                              = "([ㄱ-힣])";
-    public final static String NUM_ENG                         = "([0-9a-zA-Z])";
-    public final static String NUM_KR                          = "([0-9ㄱ-힣])";
-    public final static String ENG_KR                          = "([a-zA-Zㄱ-힣])";
-    public final static String NUM_ENG_KR                      = "([0-9a-zA-Zㄱ-힣])";
-    public final static String INTEGER                         = "^(-?[0-9]+)$";
-    public final static String NUMERIC                         = "^(-?(?:[0-9]*\\.)?[0-9]+)$";
-    
-    
+    public final static String NUM        = "([0-9])";
+    public final static String ENG        = "([a-zA-Z])";
+    public final static String KR         = "([ㄱ-힣])";
+    public final static String NUM_ENG    = "([0-9a-zA-Z])";
+    public final static String NUM_KR     = "([0-9ㄱ-힣])";
+    public final static String ENG_KR     = "([a-zA-Zㄱ-힣])";
+    public final static String NUM_ENG_KR = "([0-9a-zA-Zㄱ-힣])";
+    public final static String INTEGER    = "^(-?[0-9]+)$";
+    public final static String NUMERIC    = "^(-?(?:[0-9]*\\.)?[0-9]+)$";
+    public final static String SEP                         = "{}";
+
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
     }
@@ -32,6 +31,7 @@ public class StringUtil {
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);
     }
+
     public static String nvl(String str) {
         return nvl(str, "");
     }
@@ -56,14 +56,13 @@ public class StringUtil {
             return replace;
         } else if (obj instanceof Collection<?>) {
             return (((Collection) obj).isEmpty() ? replace : obj.toString());
-        } else if (obj instanceof Map<?,?>) {
+        } else if (obj instanceof Map<?, ?>) {
             return (((Map) obj).isEmpty() ? replace : obj.toString());
         } else {
             return nvl(obj.toString(), replace);
         }
     }
 
-    
     public static boolean isBlank(String str) {
         if (str == null) {
             return true;
@@ -97,7 +96,6 @@ public class StringUtil {
             return str;
         }
         replace = isEmpty(replace) ? "" : replace;
-        
         final int len = pattern.length();
         StringBuffer sb = new StringBuffer();
         int found = -1;
@@ -114,13 +112,12 @@ public class StringUtil {
     public static String replaceAll(String str, String pattern, String replace) {
         return replace(str, pattern, replace);
     }
-    
+
     public static String replaceFirst(String str, String pattern, String replace) {
         if (isEmpty(str) || isEmpty(pattern) || str.indexOf(pattern) == -1) {
             return str;
         }
         replace = isEmpty(replace) ? "" : replace;
-        
         final int len = pattern.length();
         StringBuffer sb = new StringBuffer();
         int found = -1;
@@ -133,13 +130,12 @@ public class StringUtil {
         sb.append(str.substring(start));
         return sb.toString();
     }
-    
+
     public static String replaceLast(String str, String pattern, String replace) {
         if (isEmpty(str) || isEmpty(pattern) || str.indexOf(pattern) == -1) {
             return str;
         }
         replace = isEmpty(replace) ? "" : replace;
-        
         final int len = pattern.length();
         StringBuffer sb = new StringBuffer();
         int found = -1;
@@ -152,9 +148,10 @@ public class StringUtil {
         sb.append(str.substring(start));
         return sb.toString();
     }
-    
+
     /**
      * 특정 문자를 제거한다.
+     * 
      * @param str
      * @param remove
      * @return
@@ -162,6 +159,7 @@ public class StringUtil {
     public static String remove(String str, String remove) {
         return replaceFirst(str, remove, "");
     }
+
     public static String removeAll(String str, String remove) {
         return replaceAll(str, remove, "");
     }
@@ -178,7 +176,7 @@ public class StringUtil {
             return null;
         }
         if (isEmpty(delimeter)) {
-            return new String[] {str};
+            return new String[] { str };
         }
         List<String> list = new ArrayList<>();
         int nCount = 0, nLastIndex = 0;
@@ -203,7 +201,6 @@ public class StringUtil {
         }
         return (String[]) (list.toArray(new String[0]));
     }
-
 
     /**
      * 왼쪽(Left)에 문자열을 끼어 넣는다. width는 문자열의 전체 길이를 나타내며 pad는 끼어 넣을 char
@@ -245,14 +242,13 @@ public class StringUtil {
         return str + sb.toString();
     }
 
-
     public static boolean contains(String str, String search) {
         if (str == null || search == null) {
             return false;
         }
         return str.indexOf(search) >= 0;
     }
-    
+
     /**
      * 입력받은 문자열 str이 prefix로 시작하는지 확인 한다.
      * 
@@ -269,7 +265,7 @@ public class StringUtil {
         }
         return str.startsWith(prefix);
     }
-    
+
     /**
      * 입력받은 문자열 str이 suffix로 끝나는지 확인 한다.
      * 
@@ -310,7 +306,6 @@ public class StringUtil {
         }
         return true;
     }
-
 
     public static boolean isEmptyObj(Object obj) {
         return isEmpty(nvlObj(obj, ""));
@@ -387,7 +382,7 @@ public class StringUtil {
     public static boolean equalsObj(Object obj1, Object obj2) {
         return equals(nvlObj(obj1), nvlObj(obj2));
     }
-    
+
     /**
      * 두 문자열을 비교해서 다르면 true 같으면 false 리턴
      *
@@ -438,7 +433,6 @@ public class StringUtil {
         return engValue(str.toString());
     }
 
-    
     /**
      * 숫자
      *
@@ -475,8 +469,6 @@ public class StringUtil {
         return str.replaceAll("\\p{Z}", "");
     }
 
-
-
     public static String concat(String str, String... appends) {
         str = isEmpty(str) ? "" : str;
         if (appends == null || appends.length <= 0) {
@@ -491,8 +483,7 @@ public class StringUtil {
     public static String concat(String str, String append) {
         return nvl(str).concat(nvl(append));
     }
-    
-    
+
     public static String substring(String str, int start, int end) {
         str = isEmpty(str) ? "" : str;
         if (end < 0) {
@@ -507,24 +498,23 @@ public class StringUtil {
         if (start > end) {
             return "";
         }
-
         if (start < 0) {
             start = 0;
         }
         if (end < 0) {
             end = 0;
         }
-
         return str.substring(start, end);
     }
+
     public static String substring(String str, int end) {
         return substring(str, 0, end);
     }
-    
+
     public static String substringStart(String str, int start) {
         return substring(str, start, str.length());
     }
-    
+
     public static String substringEnd(String str, int end) {
         return substring(str, 0, str.length() - end);
     }
@@ -577,9 +567,10 @@ public class StringUtil {
         Matcher matcher = pattern.matcher((String) target);
         return matcher.find();
     }
-    
+
     /**
      * url 패턴 체크
+     * 
      * @param url
      * @param pattern
      * @return
@@ -595,7 +586,7 @@ public class StringUtil {
         }
         return pattern.equals(url);
     }
-    
+
     public static boolean urlPatternCheck(String url, Set<String> patterns) {
         for (String pattern : patterns) {
             if (urlPatternCheck(url, pattern)) {
@@ -604,7 +595,7 @@ public class StringUtil {
         }
         return false;
     }
-    
+
     /**
      * 입력한 모든 값이 빈문자열이 아니면 true, 빈문자열이 하나라도 있으면 false
      *
@@ -619,8 +610,7 @@ public class StringUtil {
         }
         return true;
     }
-    
-    
+
     /**
      * 문자열 str1과 str2 사전식 크기비교 함수
      * str1 < str2 : -
@@ -629,6 +619,7 @@ public class StringUtil {
      * null, str2 : -1
      * str1, null : +1
      * null, null : 0
+     * 
      * @param str1
      * @param str2
      * @return
@@ -636,26 +627,28 @@ public class StringUtil {
     public static int compare(String str1, String str2) {
         return nvl(str1).compareTo(nvl(str2));
     }
-    
+
     public static boolean goe(String str1, String str2) {
-        if (compare(str1, str2)>= 0) {
+        if (compare(str1, str2) >= 0) {
             return true;
         }
         return false;
     }
+
     public static boolean loe(String str1, String str2) {
-        if (compare(str1, str2)<= 0) {
+        if (compare(str1, str2) <= 0) {
             return true;
         }
         return false;
     }
+
     public static boolean gt(String str1, String str2) {
         return !loe(str1, str2);
     }
+
     public static boolean lt(String str1, String str2) {
         return !goe(str1, str2);
     }
-
 
     public static String trimObj(Object obj) {
         return obj == null ? null : obj.toString().trim();
@@ -664,12 +657,14 @@ public class StringUtil {
     public static boolean isNull(Object obj) {
         return obj == null;
     }
-    
-    
+
     /**
      * 문자 배열 사이에 구분자를 추가하여 문자열 반환
-     * @param delimiter 구분자
-     * @param strs 문자 배열
+     * 
+     * @param delimiter
+     *            구분자
+     * @param strs
+     *            문자 배열
      * @return
      */
     public static String join(String delimiter, String... strs) {
@@ -679,14 +674,14 @@ public class StringUtil {
     public static String join(String delimiter, List<String> strs) {
         return String.join(delimiter, strs);
     }
-    
-    
+
     /**
      * 랜덤한 영문 대/소문자, 숫자로 구성된 문자열 반환
+     * 
      * @param length
      * @return
      */
-    public static String randomString(int length) { 
+    public static String randomString(int length) {
         StringBuffer temp = new StringBuffer();
         Random rnd = new Random();
         for (int i = 0; i < length; i++) {
@@ -712,5 +707,48 @@ public class StringUtil {
     public static String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
+    public static String getMessage(String mssg, Object... params) {
+        if (mssg == null || params == null || params.length == 0)
+            return mssg;
+        Integer[] idxArrays = allIndexOf(mssg, SEP);
+        StringBuffer sb = new StringBuffer("");
+        int size = idxArrays.length > params.length ? idxArrays.length : params.length;
+        int sepSize = SEP.length();
+        int pos = 0;
+        for (int i = 0; i < size; i++) {
+            sb.append(substring(mssg, pos, idxArrays[i])).append(params[i]);
+            pos = idxArrays[i]+sepSize;
+        }
+        sb.append(substringStart(mssg, pos));
+        return sb.toString();
+    }
     
+    public static String toString(Object... params) {
+        if (params == null || params.length == 0)
+            return "";
+        StringBuffer sb = new StringBuffer();
+        for (Object param : params) {
+            sb.append(param);
+        }
+        return sb.toString();
+    }
+
+    public static Integer indexOf(String str, String searchStr, int startIdx) {
+        if (str == null || searchStr == null) {
+            return -1;
+        }
+        return str.indexOf(searchStr, startIdx);
+    }
+
+    public static Integer[] allIndexOf(String str, String searchStr) {
+        int idx = 0;
+        List<Integer> list = new ArrayList<>();
+        while (indexOf(str, searchStr, idx) > -1) {
+            idx = indexOf(str, searchStr, idx);
+            list.add(idx);
+            idx += searchStr.length();
+        }
+        return list.toArray(new Integer[0]);
+    }
 }

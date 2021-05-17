@@ -794,7 +794,24 @@ public class ObjectUtil {
         }
         return paramList;
     }
-
+    
+    public static <T> Map<String, String> getSchema(Class<T> classType) {
+        Map<String, String> schema = new HashMap<>();
+        Class<?> res = classType;
+        do {
+            for (Field field : res.getDeclaredFields()) {
+                if ("id".equals(field.getName())) {
+                    schema.put(field.getName(), "ID");
+                    continue;
+                }
+                schema.put(field.getName(), field.getType().getSimpleName());
+            }
+            res = res.getSuperclass();
+            
+        } while (res != null);
+        return schema;
+    }
+    
     /**
      * 두 Object간 동치 비교
      * 
