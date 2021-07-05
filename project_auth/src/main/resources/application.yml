@@ -1,0 +1,91 @@
+# 기본 환경 선택
+spring:
+  profiles:
+    active: local
+  autoconfigure: 
+    exclude:
+    # 기본 시큐리티 기능 제외
+    - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    open-in-view: false
+    show-sql: false
+    # hibernate 설정
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  hateoas:
+    use-hal-as-default-json-media-type: false
+  data:
+    rest:
+      base-path: /api
+      default-page-size: 10
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 8080
+  servlet:
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
+  undertow:
+    accesslog:
+      enabled: true
+      pattern: '%t %a "%r" %s (%D ms)'
+      prefix: access-log-${spring..config.activate.on-profile}
+      suffix: log
+logging:
+  config: classpath:log4j2-${spring.config.activate.on-profile}.xml
+--- 
+# local
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: optional:file:/D:/dev/property/config.yml
+#  datasource:
+#    url: jdbc:log4jdbc:mariadb://{db-url}/dev?autoReconnect=true&verifyServerCertificate=false&useSSL=false
+#    username: {user-name}
+#    password: {password}
+#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#
+#server:
+#  undertow:
+#    accesslog:
+#      enabled: true
+#      dir: D:/dev/logs
+#
+#  dbType: mariadb
+#  file:
+#    root:  C:/dev/file
+#    uploads: ${file.root}/
+#    downloads: file:///${file.uploads}
+    
+--- 
+# release
+spring:
+  config:
+    activate:
+      on-profile: release
+    import: optional:file:/usr/local/springboot/property/config.yml
+#  datasource:
+#    url: jdbc:log4jdbc:mariadb://{db-url}/dev?autoReconnect=true&verifyServerCertificate=false&useSSL=false
+#    username: {user-name}
+#    password: {password}
+#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#
+#server:
+#  undertow:
+#    accesslog:
+#      enabled: true
+#      dir: /usr/local/springboot/logs
+#
+#  dbType: mariadb
+#  file:
+#    root:  /usr/local/springboot/file
+#    uploads: ${file.root}/
+#    downloads: file:///${file.uploads}

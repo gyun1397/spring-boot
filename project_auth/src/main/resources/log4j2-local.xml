@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+		<Property name="profile">local</Property>
+		<Property name="service">platform-template</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout>
+				<Pattern>%n[%date{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%logger{0}.%method \(%file:%line\)]▶▶▶ %msg ◀◀◀</Pattern>
+			</PatternLayout>
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="java.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="com.common" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+		<Logger name="com.domain" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+	    <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+	        <AppenderRef ref="console" />
+	    </Logger>
+		<Logger name="org.springframework" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="io.undertow.server" level="INFO"
+			additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Root level="ERROR">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
+

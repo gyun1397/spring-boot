@@ -8,12 +8,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -117,6 +122,39 @@ public class HttpUtil {
         return paramMap;
     }
 
+    public static String getParameterQueryString(HttpServletRequest request) {
+        QueryString qs = new QueryString();
+        boolean isMultipartForm = isMultipartForm(request);
+        try {
+            Enumeration<String> paramNames = (Enumeration<String>) request.getParameterNames();
+            String paramName = null;
+            while (paramNames.hasMoreElements()) {
+                paramName = paramNames.nextElement();
+                String[] values = request.getParameterValues(paramName);
+                if (values.length > 1) {
+                    if (isMultipartForm) {
+                        for (String value : values) {
+                            qs.add(paramName, StringUtil.toUTF8(value));
+                        }
+                    } else {
+                        for (String value : values) {
+                            qs.add(paramName, value);
+                        }
+                    }
+                } else if (values.length == 1) {
+                    if (isMultipartForm) {
+                        qs.add(paramName, StringUtil.toUTF8(values[0]));
+                    } else {
+                        qs.add(paramName, values[0]);
+                    }
+                } else {
+                }
+            }
+        } catch (Exception e) {
+        }
+        return qs.getQueryString();
+    }
+    
     public static boolean isMultipartForm(HttpServletRequest request) {
         return StringUtil.nvl(request.getContentType()).indexOf("multipart/form-data") >= 0;
     }
@@ -183,7 +221,40 @@ public class HttpUtil {
         body = stringBuilder.toString();
         return body;
     }
-
+    
+//    public static String getBody(HttpServletRequest request) {
+//        String body = null;
+//        try {
+//            InputStream inputStream = request.getInputStream();
+//            body = new String(IOUtils.toByteArray(inputStream));
+//        } catch (IOException ex) {
+//            log.debug(ex.getMessage());
+//            return null;
+//        }
+//        return body;
+//    }
+    
+    public static String getBody(ContentCachingRequestWrapper request) {
+        String body = null;
+        try {
+            body = new String(request.getContentAsByteArray(), request.getCharacterEncoding());
+        } catch (Exception ex) {
+            log.debug(ex.getMessage());
+            return null;
+        }
+        return body;
+    }
+    
+    public static String getBody(ContentCachingResponseWrapper response) {
+        String body = null;
+        try {
+            body = new String(response.getContentAsByteArray(), response.getCharacterEncoding());
+        } catch (Exception ex) {
+            log.debug(ex.getMessage());
+            return null;
+        }
+        return body;
+    }
 
     /**
      * 인자를 분석하여 Content Type을 반환함.
@@ -216,5 +287,37 @@ public class HttpUtil {
         } catch (UnsupportedEncodingException e) {
             return iso8859_1;
         }
+    }
+    
+}
+class QueryString {
+    private List<String> queryList = new ArrayList<String>();
+
+    public void add(String name, String value) {
+        queryList.add(encode(name, value));
+    }
+
+    private String encode(String name, String value) {
+        try {
+            return URLEncoder.encode(name, "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException("Broken VM does not support UTF-8");
+        }
+    }
+
+    public String getQueryString() {
+        return StringUtil.join("&", queryList);
+    }
+
+    public String getFullURL(String domainUrl) {
+        if (queryList.size() == 0) {
+            return domainUrl;
+        } else {
+            return domainUrl + "?" + StringUtil.join("&", queryList);
+        }
+    }
+
+    public String toString() {
+        return getQueryString();
     }
 }

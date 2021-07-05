@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -119,6 +120,10 @@ public class SessionUtil {
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         return attr == null ? null : attr.getRequest();
+    }
+    public static HttpServletResponse getResponse() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        return attr == null ? null : attr.getResponse();
     }
 
     public static String getSessionInfo() throws Exception {

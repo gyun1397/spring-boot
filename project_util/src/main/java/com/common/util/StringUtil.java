@@ -1,5 +1,7 @@
 package com.common.util;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,8 +24,13 @@ public class StringUtil {
     public final static String NUM_ENG_KR = "([0-9a-zA-Zㄱ-힣])";
     public final static String INTEGER    = "^(-?[0-9]+)$";
     public final static String NUMERIC    = "^(-?(?:[0-9]*\\.)?[0-9]+)$";
-    public final static String SEP                         = "{}";
+    public final static String SEP        = "{}";
 
+
+    public static String toUTF8(String rawString) throws UnsupportedEncodingException {
+        return new String(rawString.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+    }
+    
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
     }
@@ -595,6 +602,55 @@ public class StringUtil {
         }
         return false;
     }
+    
+    public static boolean urlPatternCheck(String url, String... patterns) {
+        for (String pattern : patterns) {
+            if (urlPatternCheck(url, pattern)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * String pattern checker
+     * @param str
+     * @param patterns
+     * @return
+     */
+
+    public static boolean patternChecker(String str, String... patterns) {
+        if (isNotEmpty(str) && isNotEmptyObj(patterns)) {
+            for (String pattern : patterns) {
+                if (pattern.contains("*")) {
+                    int idx = pattern.indexOf("*");
+                    String prefix = pattern.substring(0, idx);
+                    String suffix = pattern.substring(idx + 1);
+                    if (StringUtil.isNotEmpty(prefix) && StringUtil.isNotEmpty(suffix)) {
+                        if (str.startsWith(prefix) && str.endsWith(suffix)) {
+                            return true;
+                        }
+                    } else if (StringUtil.isNotEmpty(prefix)) {
+                        if (str.startsWith(prefix)) {
+                            return true;
+                        }
+                    } else if (StringUtil.isNotEmpty(suffix)) {
+                        if (str.startsWith(suffix)) {
+                            return true;
+                        }
+                    }
+                } else if (str.equals(pattern)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+
+    public static boolean patternChecker(String str, Collection<String> patterns) {
+        return patternChecker(str, patterns.toArray(new String[0]));
+    }
 
     /**
      * 입력한 모든 값이 빈문자열이 아니면 true, 빈문자열이 하나라도 있으면 false
@@ -718,12 +774,12 @@ public class StringUtil {
         int pos = 0;
         for (int i = 0; i < size; i++) {
             sb.append(substring(mssg, pos, idxArrays[i])).append(params[i]);
-            pos = idxArrays[i]+sepSize;
+            pos = idxArrays[i] + sepSize;
         }
         sb.append(substringStart(mssg, pos));
         return sb.toString();
     }
-    
+
     public static String toString(Object... params) {
         if (params == null || params.length == 0)
             return "";
@@ -751,4 +807,16 @@ public class StringUtil {
         }
         return list.toArray(new Integer[0]);
     }
+
+    public static String getValidString(String... strs) {
+        if (strs != null && strs.length != 0) {
+            for (String str : strs) {
+                if (isNotEmpty(str)) {
+                    return str;
+                }
+            }
+        }
+        return "";
+    }
+
 }

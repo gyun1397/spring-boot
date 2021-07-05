@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Error {
     private final static int DEFAULT_CODE = 400;
-    private final static String DEFAULT_TITLE = "잘못된 API 입니다.";
+    private final static String DEFAULT_TITLE = "잘못된 API";
     private final static String DEFAULT_MESSAGE = "잘못된 API 입니다.";
     private Integer code;
     private String  field;
@@ -13,7 +13,7 @@ public class Error {
     private Object  detail;
 
     public Error() {
-        this(null, null, null, null);
+        this(DEFAULT_CODE, "", DEFAULT_TITLE, DEFAULT_MESSAGE);
     };
 
     public Error(String field, Object message) {
