@@ -1,5 +1,6 @@
 package com.common.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -270,6 +271,21 @@ public class DataUtil {
             }
         }
         return BigInteger.valueOf(-1l);
+    }
+    
+    public static BigDecimal bigDecimalConvert(Object obj) {
+        if(obj == null) {
+            return null;
+        }
+        if(obj instanceof BigDecimal) {
+            return (BigDecimal) obj;
+        } else {
+            if (StringUtil.hasFindByRegex(RegularExpression.NUMERIC, stringConvert(obj))) {
+                Double target = doubleConvert(obj);
+                return BigDecimal.valueOf(target);
+            }
+        }
+        return BigDecimal.valueOf(-1d);
     }
     
     public static <T> List<T> listConvert(Object obj) {
