@@ -32,8 +32,8 @@ public class DataUtil {
     private static final String _like = "_like";
     private static final String _st = "_st";
     private static final String _end = "_end";
-    private static final String _goe = "_from";
-    private static final String _loe = "_to";
+    private static final String _goe = "_from"; // _goe
+    private static final String _loe = "_to"; // _loe
     private static final String _gt = "_gt";
     private static final String _lt = "_lt";
     

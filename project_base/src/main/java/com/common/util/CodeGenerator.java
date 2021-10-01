@@ -28,11 +28,13 @@ public class CodeGenerator {
     private static final String suffixPath    = "/**/*.class";
     private static String       defaultIdType = "Long";
     // 포맷 외 기본 equal 검색 설정
-    private static String[] equalsCase = {};
+    private static String[]     equalsCase    = {};
     // 포맷 외 기본 like 검색 설정
-    private static String[] likeCase = {};
+    private static String[]     likeCase      = {};
+    // 포맷 외 기본 startWith 검색 설정
+    private static String[]     startWithCase = {};
     // 포맷 외 기본 in 검색 설정
-    private static String[] inCase = {};
+    private static String[]     inCase        = {};
 
     public static void codeGenerator() {
         try {
@@ -650,8 +652,10 @@ public class CodeGenerator {
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
                     + "\t\t\t\t\t\tbreak;\n";
-            
         } else if (StringUtil.in(fieldName, likeCase)) {
             body = "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
                     + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) map.get(key)));\n"
@@ -671,6 +675,32 @@ public class CodeGenerator {
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
+                    + "\t\t\t\t\t\tbreak;\n";
+        } else if (StringUtil.in(fieldName, startWithCase)) {
+            body = "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_like\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) map.get(key) + \"%\"));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like((String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "\":\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_st\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like((String) map.get(key) + \"%\"));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_end\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".like(\"%\" + (String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
                     + "\t\t\t\t\t\tbreak;\n";
         } else if (StringUtil.in(fieldName, inCase) || fieldName.equals("state") || fieldName.endsWith("Check")) {
             body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
@@ -682,6 +712,9 @@ public class CodeGenerator {
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + getPlural(fieldName) + "\":\n"
                     + "\t\t\t\t\tcase \"" + getPlural(fieldName) + "_eq\":\n"
@@ -697,6 +730,21 @@ public class CodeGenerator {
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
+                    + "\t\t\t\t\t\tbreak;\n";
+        } else if (fieldName.endsWith("DateTime") || fieldName.endsWith("Date") || fieldName.endsWith("Time")) {
+            body = "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq((String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe((String) map.get(key)));\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe((String) map.get(key)));\n"
                     + "\t\t\t\t\t\tbreak;\n";
         } else {
             body = "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
@@ -717,6 +765,9 @@ public class CodeGenerator {
                     + "\t\t\t\t\t\tbreak;\n"
                     + "\t\t\t\t\tcase \"" + fieldName + "_nn\":\n"
                     + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".isNotNull() : qEntity." + fieldName + ".isNull());\n"
+                    + "\t\t\t\t\t\tbreak;\n"
+                    + "\t\t\t\t\tcase \"" + fieldName + "_mty\":\n"
+                    + "\t\t\t\t\t\tbuilder.and(DataUtil.isTrue(map.get(key)) ? qEntity." + fieldName + ".eq(\"\") : qEntity." + fieldName + ".ne(\"\"));\n"
                     + "\t\t\t\t\t\tbreak;\n";
         }
         return body;
@@ -730,10 +781,12 @@ public class CodeGenerator {
                 + "\t\t\t\t\tcase \"" + fieldName + "_ne\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".ne(DataUtil.integerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_ge\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DataUtil.integerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DataUtil.integerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_gt\":\n"
@@ -747,7 +800,7 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbreak;\n";
         return body;
     }
-    
+
     private static String bigIntegerCondition(String fieldName) {
         String body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
@@ -756,10 +809,12 @@ public class CodeGenerator {
                 + "\t\t\t\t\tcase \"" + fieldName + "_ne\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".ne(DataUtil.bigintegerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_ge\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DataUtil.bigintegerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DataUtil.bigintegerConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_gt\":\n"
@@ -782,10 +837,12 @@ public class CodeGenerator {
                 + "\t\t\t\t\tcase \"" + fieldName + "_ne\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".ne(DataUtil.doubleConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_ge\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DataUtil.doubleConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DataUtil.doubleConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_gt\":\n"
@@ -799,7 +856,7 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbreak;\n";
         return body;
     }
-    
+
     private static String bigDecimalCondition(String fieldName) {
         String body = "\t\t\t\t\tcase \"" + fieldName + "\":\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_eq\":\n"
@@ -808,10 +865,12 @@ public class CodeGenerator {
                 + "\t\t\t\t\tcase \"" + fieldName + "_ne\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".ne(DataUtil.bigDecimalConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_ge\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DataUtil.bigDecimalConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DataUtil.bigDecimalConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_gt\":\n"
@@ -834,10 +893,12 @@ public class CodeGenerator {
                 + "\t\t\t\t\tcase \"" + fieldName + "_ne\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".ne(DataUtil.longConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_ge\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DataUtil.longConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
-                + "\t\t\t\t\tcase \"" + fieldName + "_le\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DataUtil.longConvert(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_gt\":\n"
@@ -872,9 +933,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".eq(DateTimeUtil.convertLocalDate(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDate(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDate(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n";
         ;
@@ -887,9 +950,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDateTime(map.get(key))));\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDateTime(map.get(key))));\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDateTime(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDateTime(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n";
         ;
@@ -903,9 +968,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateTimeUtil.maximized(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateTimeUtil.minimized(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateTimeUtil.maximized(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n";
         ;
@@ -918,9 +985,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateUtil.minimizedToTimestamp(map.get(key))));\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateUtil.maximizedToTimestamp(map.get(key))));\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".goe(DateUtil.minimizedToTimestamp(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n"
                 + "\t\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\t\tbuilder.and(qEntity." + fieldName + ".loe(DateUtil.maximizedToTimestamp(map.get(key))));\n"
                 + "\t\t\t\t\t\tbreak;\n";
         ;
@@ -987,7 +1056,7 @@ public class CodeGenerator {
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"ids\":\n"
                 + "\t\t\t\tcase \"ids_eq\":\n"
-                + "\t\t\t\t\tbuilder.or(qEntity.id.in(DataUtil.listConvert(value, " + fieldType +".class)));\n"
+                + "\t\t\t\t\tbuilder.or(qEntity.id.in(DataUtil.listConvert(value, " + fieldType + ".class)));\n"
                 + "\t\t\t\t\tbreak;\n";
         return body;
     }
@@ -1094,9 +1163,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".eq(DateTimeUtil.convertLocalDate(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDate(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDate(value)));\n"
                 + "\t\t\t\t\tbreak;\n";
         ;
@@ -1109,9 +1180,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDateTime(value)));\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDateTime(value)));\n"
                 + "\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateTimeUtil.minimizedLocalDateTime(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateTimeUtil.maximizedLocalDateTime(value)));\n"
                 + "\t\t\t\t\tbreak;\n";
         ;
@@ -1125,9 +1198,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateTimeUtil.maximized(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateTimeUtil.minimized(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateTimeUtil.maximized(value)));\n"
                 + "\t\t\t\t\tbreak;\n";
         ;
@@ -1140,9 +1215,11 @@ public class CodeGenerator {
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateUtil.minimizedToTimestamp(value)));\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateUtil.maximizedToTimestamp(value)));\n"
                 + "\t\t\t\tcase \"" + fieldName + "_from\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_goe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".goe(DateUtil.minimizedToTimestamp(value)));\n"
                 + "\t\t\t\t\tbreak;\n"
                 + "\t\t\t\tcase \"" + fieldName + "_to\":\n"
+                + "\t\t\t\tcase \"" + fieldName + "_loe\":\n"
                 + "\t\t\t\t\tbuilder.or(qEntity." + fieldName + ".loe(DateUtil.maximizedToTimestamp(value)));\n"
                 + "\t\t\t\t\tbreak;\n";
         ;
